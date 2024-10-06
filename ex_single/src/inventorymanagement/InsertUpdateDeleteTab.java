@@ -2,12 +2,14 @@ package inventorymanagement;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,7 +17,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -33,25 +34,23 @@ public class InsertUpdateDeleteTab extends JPanel{
 	
 	JComboBox<String>	jcUpDel;
 
-	String[] header = {"카테고리명","NO.상품명","가격","수량/단위"};
+	String[] header = {"카테고리명","NO.상품명","가격","단위/수량"};
 	JTable table;
 	DefaultTableModel model;
 	JScrollPane jsPane;											
 	
+	SaveLordLogic slLohic;
+	
 	public InsertUpdateDeleteTab() {
 		
-		addLayout();
-
-	}
-	public void addLayout() {
-
-		//------------------------------------------------------ 각 매개변수 초기화
+		slLohic = new SaveLordLogic();
 		
+		//================================================ 상품등록
 		jlProductAdd	= new JLabel("상 품 등 록");
 		jlCategory		= new JLabel("카테고리명");
 		jlProduct		= new JLabel("       상품명");
 		jlPrice			= new JLabel("          가격");
-		jlUnit			= new JLabel("          단위");
+		jlUnit			= new JLabel("  단위/수량");
 
 		jtfCategory		= new JTextField(10);
 		jtfProduct		= new JTextField(10);
@@ -61,6 +60,27 @@ public class InsertUpdateDeleteTab extends JPanel{
 		jbAdd			= new JButton("상 품 등 록");
 		jbDel			= new JButton("상품삭제");
 		jbUpdate		= new JButton("상품수정");
+		//================================================ 상품수정
+		jlProductUpDel	= new JLabel("상 품 수 정 / 삭 제");
+		jlCategory2		= new JLabel("카테고리선택");
+		jlSearch		= new JLabel("              검색");
+		
+		jtfSearch		= new JTextField(10);
+		
+		
+		jcUpDel			= new JComboBox<>();
+		model 			= new DefaultTableModel(header,0);
+		table 			= new JTable(model);
+		jsPane			= new JScrollPane(table);
+		//================================================ 메서드
+		
+		eventPro();
+		addLayout();
+
+	}
+	public void addLayout() {
+
+			
 		
 		// ----------------------------------------------------- 상품등록페이지
 		JPanel productAdd = new JPanel();							// 상품등록 패널생성 
@@ -82,28 +102,32 @@ public class InsertUpdateDeleteTab extends JPanel{
 
 		gbcAdd.gridx = 1;
 		productAdd.add(jtfCategory, gbcAdd);
-
+		jtfCategory.setHorizontalAlignment(JTextField.RIGHT);
+		
 		gbcAdd.gridx = 0; gbcAdd.gridy = 2;
 		productAdd.add(jlProduct, gbcAdd);
 		jlProduct.setFont(new Font("고딕",Font.ITALIC,15));
 
 		gbcAdd.gridx = 1; // 상품명 필드
 		productAdd.add(jtfProduct, gbcAdd);
-
+		jtfProduct.setHorizontalAlignment(JTextField.RIGHT);
+		
 		gbcAdd.gridx = 0; gbcAdd.gridy = 3;
 		productAdd.add(jlPrice, gbcAdd);
 		jlPrice.setFont(new Font("고딕",Font.ITALIC,15));
 
 		gbcAdd.gridx = 1; // 가격 필드
 		productAdd.add(jtfPrice, gbcAdd);
-
+		jtfPrice.setHorizontalAlignment(JTextField.RIGHT);
+		
 		gbcAdd.gridx = 0; gbcAdd.gridy = 4;
 		productAdd.add(jlUnit, gbcAdd);
 		jlUnit.setFont(new Font("고딕",Font.ITALIC,15));
 
 		gbcAdd.gridx = 1; // 단위 필드
 		productAdd.add(jtfUnit, gbcAdd);
-
+		jtfUnit.setHorizontalAlignment(JTextField.RIGHT);
+		
 		gbcAdd.gridx = 0; gbcAdd.gridy = 5;							// 1행 6번째 열 배치
 		gbcAdd.gridwidth = 2;										// 행합침  
 		gbcAdd.anchor = GridBagConstraints.CENTER;					// 합친행 중앙배치
@@ -115,17 +139,7 @@ public class InsertUpdateDeleteTab extends JPanel{
 		productAdd.setBorder(blackLine);									// 테두리 패널에 추가
 
 		//-------------------------------------------------	상품 수정 매개변수 초기화
-		jlProductUpDel	= new JLabel("상 품 수 정 / 삭 제");
-		jlCategory2		= new JLabel("카테고리선택");
-		jlSearch		= new JLabel("              검색");
 		
-		jtfSearch		= new JTextField(10);
-		
-		
-		jcUpDel			= new JComboBox<>();
-		model 			= new DefaultTableModel(header,0);
-		table 			= new JTable(model);
-		jsPane			= new JScrollPane(table);
 		//------------------------------------------------- 상품 수정,삭제 페이지
 		
 		
@@ -197,5 +211,37 @@ public class InsertUpdateDeleteTab extends JPanel{
         gbcPane.weightx = 0.7;
         gbcPane.gridx = 1;
         add(productUpDel, gbcPane);
+	}
+	
+	public void eventPro() {
+		jbAdd.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				prductAdd();
+				
+			}
+		});
+	}
+	
+	void prductAdd() {
+		
+		ArrayList<String> list = new ArrayList<>();
+
+		list.add(jtfCategory.getText());
+		list.add(UUID.randomUUID().toString());
+		list.add(jtfProduct.getText());
+		list.add(jtfPrice.getText());
+		list.add(jtfUnit.getText());
+		
+		System.out.println(list);
+		slLohic.saveData(list);
+		
+		clearField();
+	}
+	void clearField() {
+		jtfCategory.setText("");;
+		jtfProduct.setText("");;
+		jtfPrice.setText("");;
+		jtfUnit.setText("");;
 	}
 }

@@ -15,7 +15,7 @@ public class MainTab extends JPanel {
 	JLabel 		jlSearch,jlCount;
 	JTextField 	jtfSearch,jtfCount;
 	JButton 	jbCountAdd,jbCountDel;
-	String[] header = {"카테고리명","NO.상품명","가격","수량/단위"};
+	String[] header = {"카테고리명","NO.상품명","가격","단위/수량"};
 	
 	JTable table;
 	DefaultTableModel model;

@@ -45,6 +45,15 @@ public class IMVO {
 	public String toString() {
 		return category + "," + productkey + "," + product + "," + price + "," + unit;
 	}
-	
+	public String[] toStringArrayAdd() {
+		String[] toString = {category,productkey+"."+product,price,"0",unit};
+		
+		return toString;
+	}
+	public String[] toStringArray() {
+		String[] toString = {category,productkey+"."+product,price,unit};
+		
+		return toString;
+	}
 	
 }

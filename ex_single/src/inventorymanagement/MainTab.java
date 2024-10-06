@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,20 +16,20 @@ public class MainTab extends JPanel {
 	JLabel 		jlSearch,jlCount;
 	JTextField 	jtfSearch,jtfCount;
 	JButton 	jbCountAdd,jbCountDel;
-	String[] header = {"카테고리명","NO.상품명","가격","수량/금액"};
+	String[] header = {"카테고리명","NO.상품명","가격","수량","단위"};
 	
 	JTable table;
 	DefaultTableModel model;
 	JScrollPane jsPane;
 	
-	
+	SaveLordLogic slLohic = new SaveLordLogic();
 	public MainTab(){
 		
 		model 	= new DefaultTableModel(header,0);
 		table 	= new JTable(model);
 		jsPane	= new JScrollPane(table);
 		
-		
+		lordData();
 		addLayout();
 	}
 	public void addLayout() {
@@ -69,5 +70,12 @@ public class MainTab extends JPanel {
 		add(searchCount,BorderLayout.NORTH);
 		add(maintable,BorderLayout.CENTER);
 		
+	}
+	void lordData() {
+		
+		ArrayList<IMVO> vo = slLohic.lordData();
+		for(IMVO item : vo) {
+			model.addRow(item.toStringArrayAdd());
+		}
 	}
 }

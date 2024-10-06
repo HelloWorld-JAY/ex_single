@@ -8,6 +8,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -34,7 +36,7 @@ public class InsertUpdateDeleteTab extends JPanel{
 	
 	JComboBox<String>	jcUpDel;
 
-	String[] header = {"카테고리명","NO.상품명","가격","단위/수량"};
+	String[] header = {"카테고리명","NO.상품명","가격","수량/금액"};
 	JTable table;
 	DefaultTableModel model;
 	JScrollPane jsPane;											
@@ -50,7 +52,7 @@ public class InsertUpdateDeleteTab extends JPanel{
 		jlCategory		= new JLabel("카테고리명");
 		jlProduct		= new JLabel("       상품명");
 		jlPrice			= new JLabel("          가격");
-		jlUnit			= new JLabel("  단위/수량");
+		jlUnit			= new JLabel("  수량/금액");
 
 		jtfCategory		= new JTextField(10);
 		jtfProduct		= new JTextField(10);
@@ -225,16 +227,16 @@ public class InsertUpdateDeleteTab extends JPanel{
 	
 	void prductAdd() {
 		
-		ArrayList<String> list = new ArrayList<>();
+		IMVO vo = new IMVO();
 
-		list.add(jtfCategory.getText());
-		list.add(UUID.randomUUID().toString());
-		list.add(jtfProduct.getText());
-		list.add(jtfPrice.getText());
-		list.add(jtfUnit.getText());
+		vo.setCategory(jtfCategory.getText());
+		vo.setProductkey(todaykey());
+		vo.setProduct(jtfProduct.getText());
+		vo.setPrice(jtfPrice.getText());
+		vo.setUnit(jtfUnit.getText());
 		
-		System.out.println(list);
-		slLohic.saveData(list);
+		System.out.println(vo.toString());
+		slLohic.saveData(vo);
 		
 		clearField();
 	}
@@ -243,5 +245,14 @@ public class InsertUpdateDeleteTab extends JPanel{
 		jtfProduct.setText("");;
 		jtfPrice.setText("");;
 		jtfUnit.setText("");;
+	}
+	
+	String todaykey() {
+		LocalDateTime now = LocalDateTime.now();
+		
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+		String formatDateTime = now.format(format);
+		
+		return formatDateTime;
 	}
 }

@@ -1,11 +1,13 @@
 package inventorymanagement;
 
 public class IMVO {
+
 	String category;
 	String productkey;
 	String product;
 	String price;
-	String Unit;
+	String unit;
+	
 	
 	
 	
@@ -34,10 +36,15 @@ public class IMVO {
 		this.price = price;
 	}
 	public String getUnit() {
-		return Unit;
+		return unit;
 	}
 	public void setUnit(String unit) {
-		Unit = unit;
+		this.unit = unit;
 	}
+	
+	public String toString() {
+		return category + "," + productkey + "," + product + "," + price + "," + unit;
+	}
+	
 	
 }
